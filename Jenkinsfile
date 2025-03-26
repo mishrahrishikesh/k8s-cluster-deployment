@@ -2,8 +2,8 @@ pipeline {
     agent any
     parameters {
         // Number of master and worker nodes
-        int(name: 'MASTER_COUNTER', defaultValue: 1, description: 'Number of master nodes')
-        int(name: 'WORKER_COUNTER', defaultValue: 2, description: 'Number of worker nodes')
+        integer(name: 'MASTER_COUNTER', defaultValue: 1, description: 'Number of master nodes')
+        integer(name: 'WORKER_COUNTER', defaultValue: 2, description: 'Number of worker nodes')
 
         // IP addresses for master and worker nodes
         string(name: 'Master_IPs', defaultValue: '', description: 'Comma-separated list of master node IPs')
