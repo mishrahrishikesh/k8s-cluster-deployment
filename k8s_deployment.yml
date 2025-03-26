@@ -77,12 +77,12 @@
     - name: Intialize the master node
       shell: "kubeadm init --pod-network-cidr=192.168.10.0/16 --control-plane-endpoint={{inventory_hostname}}"
       register: kubeadm
-      when: inventory_hostname == "10.129.155.220"
+      when: "'master' in group_names"
     
     - name: Status of intialization
       debug:
         msg: "{{ kubeadm }}"
-      when: inventory_hostname == "10.129.155.220"
+      when: "'master' in group_names"
 
     - name: Get command to join worked
       shell: kubeadm token create --print-join-command
@@ -94,26 +94,26 @@
         mkdir -p ~/.kube
         cp -i /etc/kubernetes/admin.conf ~/.kube/config
         chown $(id -u):$(id -g) ~/.kube/config
-      when: inventory_hostname == "10.129.155.220"
+      when: "'master' in group_names"
     
     - name: Install calico 
       shell: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
-      when: inventory_hostname == "10.129.155.220"
+      when: "'master' in group_names"
 
     - name: Add calico port in firewall
       shell: firewall-cmd --add-port=179/tcp --permanent && firewall-cmd --reload
-      when: inventory_hostname == "10.129.155.220"
+      when: "'master' in group_names"
  
     - name: Join worker node
       shell: "{{ join_worker.stdout }} --cri-socket /var/run/crio/crio.sock"
-      when: inventory_hostname != groups['master'][0]
+      when: "'worker' in group_names"
     
     - name: Setup kube config on worker nodes
       shell: |
         mkdir ~/.kube
         cp /etc/kubernetes/kubelet.conf  ~/.kube/config
         systemctl restart kubelet
-      when: inventory_hostname != groups['master'][0]
+      when: "'worker' in group_names"
 
     - name: Check cluster status from all nodes
       shell: kubectl get nodes -o wide

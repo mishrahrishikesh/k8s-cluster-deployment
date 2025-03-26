@@ -5,7 +5,7 @@
   tasks:
     - name: Remove calico
       shell: kubectl delete -f https://docs.projectcalico.org/manifests/calico.yaml
-      when: inventory_hostname == "10.129.155.220"
+      when: "'master' in group_names"
     
     - name: Remove all resources 
       shell: |
@@ -14,7 +14,7 @@
         kubectl delete secret --all --all-namespaces
         kubectl delete pvc --all --all-namespaces
         kubectl delete crd --all
-      when: inventory_hostname == "10.129.155.220"
+      when: "'master' in group_names"
     
     - name: Remove kubectl, kubeadm, kubelet and CRI-O
       shell: dnf remove kubeadm kubelet kubectl kubernetes-cni cri-o -y
@@ -51,12 +51,12 @@
     
     - name: Reboot Master node
       reboot: 
-      when: inventory_hostname == "10.129.155.220"
+      when: "'master' in group_names"
     
     - name: Validate K8s Cluster Deleted successully 
       shell: ps aux | grep kube
       register: output
-      when: inventory_hostname == "10.129.155.220"
+      when: "'master' in group_names"
 
     - name: Display state
       debug:
