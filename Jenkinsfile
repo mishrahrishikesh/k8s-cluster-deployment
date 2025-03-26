@@ -47,7 +47,7 @@ pipeline {
                     def workerIPs = params.Worker_IPs.split(',').collect { it.trim() }
 
                     // Call the Python script to generate the inventory based on the user inputs
-                    sh "python3 generate_inventory.py ${masterCount} ${workerCount} ${masterIPs.join(' ')} ${workerIPs.join(' ')}"
+                    sh "python3 generate_inventory.py 1 ${workerCount} ${masterIPs.join(' ')} ${workerIPs.join(' ')}"
                 }
             }
         }
