@@ -1,9 +1,9 @@
 pipeline {
     agent any
     parameters {
-        // Number of master and worker nodes
-        integer(name: 'MASTER_COUNTER', defaultValue: 1, description: 'Number of master nodes')
-        integer(name: 'WORKER_COUNTER', defaultValue: 2, description: 'Number of worker nodes')
+        // Number of master and worker nodes (use string instead of integer)
+        string(name: 'MASTER_COUNTER', defaultValue: '1', description: 'Number of master nodes')
+        string(name: 'WORKER_COUNTER', defaultValue: '2', description: 'Number of worker nodes')
 
         // IP addresses for master and worker nodes
         string(name: 'Master_IPs', defaultValue: '', description: 'Comma-separated list of master node IPs')
@@ -16,17 +16,21 @@ pipeline {
         stage('Validate Inputs') {
             steps {
                 script {
+                    // Convert the counters from string to integer
+                    def masterCount = params.MASTER_COUNTER.toInteger()
+                    def workerCount = params.WORKER_COUNTER.toInteger()
+
                     // Split the input IPs into lists
                     def masterIPs = params.Master_IPs.split(',').collect { it.trim() }
                     def workerIPs = params.Worker_IPs.split(',').collect { it.trim() }
 
                     // Validate the number of IPs matches the number of nodes
-                    if (masterIPs.size() != params.MASTER_COUNTER) {
-                        error "The number of master nodes (${params.MASTER_COUNTER}) does not match the number of master IPs (${masterIPs.size()})"
+                    if (masterIPs.size() != masterCount) {
+                        error "The number of master nodes (${masterCount}) does not match the number of master IPs (${masterIPs.size()})"
                     }
 
-                    if (workerIPs.size() != params.WORKER_COUNTER) {
-                        error "The number of worker nodes (${params.WORKER_COUNTER}) does not match the number of worker IPs (${workerIPs.size()})"
+                    if (workerIPs.size() != workerCount) {
+                        error "The number of worker nodes (${workerCount}) does not match the number of worker IPs (${workerIPs.size()})"
                     }
 
                     echo "Input validation passed."
@@ -37,12 +41,16 @@ pipeline {
         stage('Update Inventory') {
             steps {
                 script {
+                    // Convert the counters from string to integer
+                    def masterCount = params.MASTER_COUNTER.toInteger()
+                    def workerCount = params.WORKER_COUNTER.toInteger()
+
                     // Split the input IPs into lists and pass them to the Python script
                     def masterIPs = params.Master_IPs.split(',').collect { it.trim() }
                     def workerIPs = params.Worker_IPs.split(',').collect { it.trim() }
 
                     // Call the Python script to generate the inventory based on the user inputs
-                    sh "python3 generate_inventory.py ${params.MASTER_COUNTER} ${params.WORKER_COUNTER} ${masterIPs.join(' ')} ${workerIPs.join(' ')}"
+                    sh "python3 generate_inventory.py ${masterCount} ${workerCount} ${masterIPs.join(' ')} ${workerIPs.join(' ')}"
                 }
             }
         }
