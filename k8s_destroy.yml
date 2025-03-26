@@ -55,6 +55,11 @@
     
     - name: Validate K8s Cluster Deleted successully 
       shell: ps aux | grep kube
+      register: output
       when: inventory_hostname == "10.129.155.220"
+
+    - name: Display state
+      debug:
+        var: "{{output}}"
 
 
