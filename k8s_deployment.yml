@@ -75,7 +75,7 @@
         timeout: 60
 
     - name: Intialize the master node
-      shell: "kubeadm init --pod-network-cidr=192.168.10.0/16 --control-plane-endpoint={{inventory_hostname}}"
+      shell: "kubeadm init --pod-network-cidr=192.168.10.0/16 --control-plane-endpoint={{ ansible_host }}"
       register: kubeadm
       when: "'master' in group_names"
     
