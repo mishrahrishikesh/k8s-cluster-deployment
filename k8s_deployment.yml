@@ -89,9 +89,13 @@
       register: join_worker
       when: "'master' in group_names"
     
+    - name: Set the kubeadm join command as a fact
+      set_fact:
+        join_worker: "{{ join_worker.stdout }}"
+    
     - name: Display the kubeadm join command
       debug:
-        var: join_worker.stdout
+        var: join_worker
 
     - name: Setup kube config 
       shell: | 
@@ -109,7 +113,7 @@
       when: "'master' in group_names"
  
     - name: Join worker node
-      shell: "{{ hostvars['master']['join_worker'].stdout }} --cri-socket /var/run/crio/crio.sock"
+      shell: "{{ hostvars['master']['join_worker'] }} --cri-socket /var/run/crio/crio.sock"
       when: "'worker' in group_names"
     
     - name: Setup kube config on worker nodes
