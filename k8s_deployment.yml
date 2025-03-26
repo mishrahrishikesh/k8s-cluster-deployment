@@ -87,7 +87,7 @@
     - name: Get command to join worked
       shell: kubeadm token create --print-join-command
       register: join_worker
-      delegate_to: "{{ groups['master'][0] }}"
+      when: "'master' in group_names"
     
     - name: Setup kube config 
       shell: | 
