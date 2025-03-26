@@ -11,7 +11,7 @@ pipeline{
                         sh 'ansible-playbook -i host k8s_deployment.yml'
                     }
                     else{
-                        sh 'df -lh'
+                        sh 'ansible-playbook -i host k8s_destroy.yml'
                     }
                 }
             }

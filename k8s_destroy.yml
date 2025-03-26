@@ -1,0 +1,60 @@
+---
+- name: Delete kubernetes cluster
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Remove calico
+      shell: kubectl delete -f https://docs.projectcalico.org/manifests/calico.yaml
+      when: inventory_hostname == "10.129.155.220"
+    
+    - name: Remove all resources 
+      shell: |
+        kubectl delete all --all --all-namespaces
+        kubectl delete configmap --all --all-namespaces
+        kubectl delete secret --all --all-namespaces
+        kubectl delete pvc --all --all-namespaces
+        kubectl delete crd --all
+      when: inventory_hostname == "10.129.155.220"
+    
+    - name: Remove kubectl, kubeadm, kubelet and CRI-O
+      shell: dnf remove kubeadm kubelet kubectl kubernetes-cni cri-o -y
+    
+    - name: Remove all directories, configs and repos
+      shell: | 
+        rm -rf ~/.kube/
+        rm -rf /etc/modules-load.d/k8s.conf
+        rm -rf /etc/sysctl.d/k8s.conf
+        rm -rf /etc/yum.repos.d/cri-o.repo
+        rm -rf /etc/yum.repos.d/kubernetes.repo
+        rm -rf /etc/systemd/system/kubelet.service.d/
+        rm -rf /etc/kubernetes
+        rm -rf /var/lib/kubelet
+        rm -rf /var/lib/etcd
+        rm -rf /etc/cni
+        rm -rf /var/run/crio
+        rm -rf /var/lib/crio
+
+    - name: Cleanup and update Iptables
+      shell: |
+        iptables -F
+        iptables -t nat -F
+        iptables -t mangle -F
+    
+    - name: Remove ports from firewall
+      shell: |
+        firewall-cmd --permanent --remove-port=6443/tcp
+        firewall-cmd --permanent --remove-port=10250-10252/tcp
+        firewall-cmd --permanent --remove-port=2379-2380/tcp
+        firewall-cmd --permanent --remove-port=30000-32767/tcp
+        firewall-cmd --permanent --remove-port=179/tcp  
+        firewall-cmd --reload
+    
+    - name: Reboot Master node
+      reboot: 
+      when: inventory_hostname == "10.129.155.220"
+    
+    - name: Validate K8s Cluster Deleted successully 
+      shell: ps aux | grep kube
+      when: inventory_hostname == "10.129.155.220"
+
+
