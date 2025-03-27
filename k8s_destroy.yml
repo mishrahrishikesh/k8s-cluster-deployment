@@ -52,15 +52,5 @@
     - name: Reboot Master node
       reboot: 
       when: "'master' in group_names"
-    
-    - name: Validate K8s Cluster Deleted successully 
-      shell: ps aux | grep kube
-      register: output
-      when: "'master' in group_names"
-
-    - name: Display state
-      debug:
-        var: "{{output}}"
-      when: "'master' in group_names"
 
 
