@@ -61,5 +61,6 @@
     - name: Display state
       debug:
         var: "{{output}}"
+      when: "'master' in group_names"
 
 

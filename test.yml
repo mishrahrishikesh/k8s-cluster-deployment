@@ -1,0 +1,14 @@
+- name: Task to get value
+  hosts: all
+  tasks:
+    - name: Run command and register the output
+      shell: hostnamectl
+      register: join_command
+      when: "'master' in group_names"
+
+# - name: Task to use value
+#   hosts: worker1
+#   tasks:
+    - name: Use the registered variable from host1
+      debug:
+        msg: "{{ hostvars['master1'].join_command.stdout }}"
