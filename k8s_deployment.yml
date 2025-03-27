@@ -105,7 +105,7 @@
       when: "'master' in group_names"
 
     - name: Join worker node
-      shell: "{{ hostvars['master1'].join_worker }} --cri-socket /var/run/crio/crio.sock"
+      shell: "{{ hostvars['master1'].join_worker.stdout }} --cri-socket /var/run/crio/crio.sock"
       when: "'worker' in group_names"
     
     - name: Setup kube config on worker nodes
