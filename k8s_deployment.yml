@@ -3,6 +3,10 @@
   hosts: all 
   gather_facts: true
   tasks:
+    - name: Debug environment variables
+      debug:
+        msg: "{{ ansible_env.PATH }}"
+
     - name: Disable swap on all nodes
       shell: swapoff -a
       # ignore_errors: true
