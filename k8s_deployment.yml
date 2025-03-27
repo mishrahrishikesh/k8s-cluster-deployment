@@ -4,7 +4,7 @@
   gather_facts: true
   tasks:
     - name: Disable swap on all nodes
-      command: swapoff -a && sed -i '/ swap / s/^/#/' /etc/fstab
+      shell: swapoff -a && sed -i '/ swap / s/^/#/' /etc/fstab
       # ignore_errors: true
     
     # - name: Add all neccessary port to firewall on all nodes
