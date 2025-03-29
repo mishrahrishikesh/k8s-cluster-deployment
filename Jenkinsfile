@@ -9,7 +9,7 @@ pipeline{
         stage('Update Inventory'){
             steps{
                 script{
-                    sh """python3 generate_inventory.py 1 ${params.WORKER_COUNTER} 10.129.155.220 ${params.WorkerIP}"""
+                    sh """python3 generate_inventory.py 1 ${params.WORKER_COUNTER} 10.129.155.220 ${params.WorkerIP.split(',')}"""
                 }
             }
         }
