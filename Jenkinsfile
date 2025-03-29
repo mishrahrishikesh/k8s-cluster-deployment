@@ -34,7 +34,7 @@ pipeline{
                         sh 'ansible-playbook -i inventory.yml k8s_destroy.yml'
                     }
                     else{
-                        sh 'hostname'
+                        echo 'Testing...'
                     }
                 }
             }
