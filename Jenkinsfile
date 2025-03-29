@@ -2,15 +2,15 @@ pipeline{
     agent any
     parameters{
         string(name: 'WORKER_COUNTER', defaultValue: '2', description: 'Number of worker nodes')
-        string(name: 'WorkerIP', description: 'Write comma seprated Worker IPs')
+        text(name: 'WorkerIP', description: 'Write comma seprated Worker IPs')
         choice(name: 'ACTION', choices:['Deploy', 'Destroy', 'Test'])
     }
     stages{
         stage('Update Inventory'){
             steps{
                 script{
-                    def ips = params.WorkerIP.split(',')
-                    sh """python3 generate_inventory.py 1 ${params.WORKER_COUNTER} 10.129.155.220 ${ips}"""
+                    // def ips = params.WorkerIP.split(',')
+                    sh """python3 generate_inventory.py 1 ${params.WORKER_COUNTER} 10.129.155.220 ${WorkerIP}"""
                 }
             }
         }
