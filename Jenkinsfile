@@ -1,7 +1,7 @@
 pipeline{
     agent any
     parameters{
-        string(name: 'WORKER_COUNTER', defaultValue: 2, description: 'Number of worker nodes')
+        string(name: 'WORKER_COUNTER', defaultValue: '2', description: 'Number of worker nodes')
         string(name: 'WorkerIP', description: 'Write comma seprated Worker IPs')
         choice(name: 'ACTION', choices:['Deploy', 'Destroy', 'Test'])
     }
