@@ -11,7 +11,7 @@ pipeline{
         stage('Update Inventory'){
             steps{
                 script{
-                    def no_of_ip=params.MasterNodes.split(' ').size()
+                    def no_of_ip=params.MasterIP.split(' ').size()
                     if(params.MasterNodes == no_of_ip){
                     sh """python3 generate_inventory.py 1 ${params.WorkerNodes} ${MasterIP} ${WorkerIP}"""
                     }
