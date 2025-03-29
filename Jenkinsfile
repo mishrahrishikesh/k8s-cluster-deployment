@@ -12,6 +12,7 @@ pipeline{
             steps{
                 script{
                     def no_of_ip=params.MasterIP.split(' ').size()
+                    echo "${no_of_ip}"
                     if(params.MasterNodes == no_of_ip){
                     sh """python3 generate_inventory.py 1 ${params.WorkerNodes} ${MasterIP} ${WorkerIP}"""
                     }
