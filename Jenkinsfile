@@ -10,10 +10,7 @@ pipeline{
             steps{
                 script{
                     def ips = params.WorkerIP.split(',')
-                    ips.each { ip -> 
-                      echo "${ip}"
-                    }
-                    sh """python3 generate_inventory.py 1 ${params.WORKER_COUNTER} 10.129.155.220"""
+                    sh """python3 generate_inventory.py 1 ${params.WORKER_COUNTER} 10.129.155.220 ${ips}"""
                 }
             }
         }
