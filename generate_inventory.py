@@ -13,9 +13,6 @@ for ip in range(start,start+no_of_master):
 for ip in range(start+no_of_master,start+total_ips):
     worker_ips.append(sys.argv[ip])
     
-print(master_ips)
-print(worker_ips)
-
 count=1
 
 with open('inventory.yml', 'w') as file:
