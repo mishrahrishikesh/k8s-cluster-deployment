@@ -1,16 +1,23 @@
 pipeline{
     agent any
     parameters{
-        string(name: 'WORKER_COUNTER', defaultValue: '2', description: 'Number of worker nodes')
-        text(name: 'WorkerIP', description: 'Write comma seprated Worker IPs')
+        string(name: 'MasterNodes', defaultValue: '2', description: 'Number of Worker nodes')
+        string(name: 'WorkerNodes', defaultValue: '2', description: 'Number of Master nodes')
+        text(name: 'MasterIP', description: 'Write space seprated Master IPs')
+        text(name: 'WorkerIP', description: 'Write space seprated Worker IPs')
         choice(name: 'ACTION', choices:['Deploy', 'Destroy', 'Test'])
     }
     stages{
         stage('Update Inventory'){
             steps{
                 script{
-                    // def ips = params.WorkerIP.split(',')
-                    sh """python3 generate_inventory.py 1 ${params.WORKER_COUNTER} 10.129.155.220 ${WorkerIP}"""
+                    def no_of_ip=params.MasterNodes.split(' ').size()
+                    if(params.MasterNodes == no_of_ip){
+                    sh """python3 generate_inventory.py 1 ${params.WorkerNodes} ${MasterIP} ${WorkerIP}"""
+                    }
+                    else{
+                        sh 'echo NotCorrect'
+                    }
                 }
             }
         }
