@@ -7,9 +7,9 @@ pipeline{
     }
     stages{
         stage('Update Inventory'){
-            def ips = params.WorkerIP.split(',')
             steps{
                 script{
+                    def ips = params.WorkerIP.split(',')
                     sh """python3 generate_inventory.py 1 ${params.WORKER_COUNTER} 10.129.155.220 ${ips.each {ip -> ${ip}}}"""
                 }
             }
