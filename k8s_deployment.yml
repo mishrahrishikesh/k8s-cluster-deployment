@@ -80,7 +80,7 @@
         timeout: 60
 
     - name: Intialize the master node
-      shell: "kubeadm init --pod-network-cidr=192.168.10.0/16 --control-plane-endpoint={{ ansible_host }}"
+      shell: "kubeadm init --pod-network-cidr=10.244.0.0/16 --control-plane-endpoint={{ ansible_host }}"
       register: kubeadm
       when: "'master' in group_names"
       ignore_errors: true
@@ -97,8 +97,12 @@
         chown $(id -u):$(id -g) ~/.kube/config
       when: "'master' in group_names"
     
-    - name: Install calico 
-      shell: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+    # - name: Install calico 
+    #   shell: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+    #   when: "'master' in group_names"
+    
+    - name: Install flannel 
+      shell: kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
       when: "'master' in group_names"
 
     - name: Add calico port in firewall
